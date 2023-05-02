@@ -37,6 +37,7 @@ import com.dessalines.thumbkey.keyboards.MESSAGEEASE_HE_KEYBOARD_MODES
 import com.dessalines.thumbkey.keyboards.THUMBKEY_DE_V2_KEYBOARD_MODES
 import com.dessalines.thumbkey.keyboards.THUMBKEY_DK_V1_KEYBOARD_MODES
 import com.dessalines.thumbkey.keyboards.THUMBKEY_EN_V4_KEYBOARD_MODES
+import com.dessalines.thumbkey.keyboards.THUMBKEY_EN_V4_INTL_KEYBOARD_MODES
 import com.dessalines.thumbkey.keyboards.THUMBKEY_EN_V4_PROGRAMMER_KEYBOARD_MODES
 import com.dessalines.thumbkey.keyboards.THUMBKEY_ES_V1_KEYBOARD_MODES
 import com.dessalines.thumbkey.keyboards.THUMBKEY_EU_V1_KEYBOARD_MODES
@@ -83,6 +84,7 @@ fun fontSizeVariantToFontSize(fontSizeVariant: FontSizeVariant, keySize: Dp): Te
 fun keyboardLayoutToModes(layout: KeyboardLayout): Map<KeyboardMode, KeyboardC> {
     return when (layout) {
         KeyboardLayout.ThumbKeyENv4 -> THUMBKEY_EN_V4_KEYBOARD_MODES
+        KeyboardLayout.ThumbKeyENv4Intl -> THUMBKEY_EN_V4_INTL_KEYBOARD_MODES
         KeyboardLayout.ThumbKeyENv4Programmer -> THUMBKEY_EN_V4_PROGRAMMER_KEYBOARD_MODES
         KeyboardLayout.ThumbKeyDEv2 -> THUMBKEY_DE_V2_KEYBOARD_MODES
         KeyboardLayout.ThumbKeyDKv1 -> THUMBKEY_DK_V1_KEYBOARD_MODES
@@ -218,6 +220,61 @@ fun performKeyAction(
                     ime = ime,
                     onAutoCapitalize = onAutoCapitalize
                 )
+            }
+        }
+        is KeyAction.ComposeLastKey -> {
+            Log.d(TAG, "composing last key")
+            val text = action.text
+            val textBefore = ime.currentInputConnection.getTextBeforeCursor(1, 0)
+
+            val textNew = when (text) {
+                "\"" -> when(textBefore) {
+                    "a" -> "ä"; "A" -> "Ä"
+                    "e" -> "ë"; "E" -> "Ë"
+                    "i" -> "ï"; "I" -> "Ï"
+                    "o" -> "ö"; "O" -> "Ö"
+                    "u" -> "ü"; "U" -> "Ü"
+                    else -> textBefore
+                }
+                "'" -> when(textBefore) {
+                    "a" -> "á"; "A" -> "Á"
+                    "e" -> "é"; "E" -> "É"
+                    "i" -> "í"; "I" -> "Í"
+                    "o" -> "ó"; "O" -> "Ó"
+                    "u" -> "ú"; "U" -> "Ú"
+                    else -> textBefore
+                }
+                "`" -> when(textBefore) {
+                    "a" -> "à"; "A" -> "À"
+                    "e" -> "è"; "E" -> "È"
+                    "i" -> "ì"; "I" -> "Ì"
+                    "o" -> "ò"; "O" -> "Ò"
+                    "u" -> "ù"; "U" -> "Ù"
+                    else -> textBefore
+                }
+                "^" -> when(textBefore) {
+                    "a" -> "â"; "A" -> "Â"
+                    "e" -> "ê"; "E" -> "Ê"
+                    "i" -> "î"; "I" -> "Î"
+                    "o" -> "ô"; "O" -> "Ô"
+                    "u" -> "û"; "U" -> "Û"
+                    "s" -> "ŝ"; "S" -> "Ŝ"
+                    else -> textBefore
+                }
+                "~" -> when(textBefore) {
+                    "n" -> "ñ"; "N" -> "Ñ"
+                    "c" -> "ç"; "C" -> "Ç"
+                    "a" -> "æ"; "A" -> "Æ"
+                    "!" -> "¡"
+                    "?" -> "¿"
+                    else -> textBefore
+                }
+                else -> throw IllegalStateException("Invalid key modifier")
+            }
+
+            if (textNew != textBefore) {
+                ime.currentInputConnection.deleteSurroundingText(1, 0)
+                ime.currentInputConnection.commitText(textNew, 1)
             }
         }
         is KeyAction.ToggleShiftMode -> {
