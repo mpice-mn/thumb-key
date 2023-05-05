@@ -168,7 +168,7 @@ val THUMBKEY_EN_V4_MAIN_INTL = KeyboardC(
                         action = KeyAction.ToggleShiftMode(true),
                         color = ColorVariant.MUTED
                     ),
-                    SwipeDirection.TOP_RIGHT to KeyC(
+                    SwipeDirection.BOTTOM_RIGHT to KeyC(
                         display = KeyDisplay.TextDisplay("ä"),
                         action = KeyAction.CommitText("ä")
                     )
@@ -416,7 +416,7 @@ val THUMBKEY_EN_V4_SHIFTED_INTL = KeyboardC(
                         action = KeyAction.ToggleCapsLock,
                         color = ColorVariant.MUTED
                     ),
-                    SwipeDirection.TOP_RIGHT to KeyC(
+                    SwipeDirection.BOTTOM_RIGHT to KeyC(
                         display = KeyDisplay.TextDisplay("Ä"),
                         action = KeyAction.CommitText("Ä")
                     )
