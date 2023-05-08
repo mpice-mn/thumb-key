@@ -1,6 +1,7 @@
 package com.dessalines.thumbkey.ui.components.keyboard
 import android.content.Context
 import android.media.AudioManager
+import android.view.View.LAYOUT_DIRECTION_RTL
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
@@ -172,6 +173,9 @@ fun KeyboardKey(
                         offsetY += y
                     },
                     onDragEnd = {
+                        if (ctx.resources.configuration.layoutDirection == LAYOUT_DIRECTION_RTL) {
+                            offsetX *= -1
+                        }
                         val swipeDirection = swipeDirection(offsetX, offsetY, minSwipeLength, key.swipeType)
                         val action = key.swipes?.get(swipeDirection)?.action ?: key.center.action
 
