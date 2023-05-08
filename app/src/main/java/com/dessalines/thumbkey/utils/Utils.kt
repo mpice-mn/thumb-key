@@ -187,7 +187,7 @@ fun performKeyAction(
             Log.d(TAG, "committing key text: $text")
             ime.currentInputConnection.commitText(
                 text,
-                text.length
+                1
             )
 
             if (autoCapitalize) {
